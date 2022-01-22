@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(Quizzler());
 
 class Quizzler extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -10,7 +11,7 @@ class Quizzler extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: QuizPage(),
           ),
         ),
@@ -25,13 +26,16 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+
+  List <Widget> scoreKeeper = [];
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Expanded(
+        const Expanded(
           flex: 5,
           child: Padding(
             padding: EdgeInsets.all(10.0),
@@ -47,13 +51,22 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: scoreKeeper,
+          ),
+        ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green,
-              child: Text(
+            padding: const EdgeInsets.all(15.0),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+                primary: Colors.red,
+              ),
+              child: const Text(
                 'True',
                 style: TextStyle(
                   color: Colors.white,
@@ -61,30 +74,48 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                setState(() {
+                  scoreKeeper.add(
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                  );
+                });
               },
             ),
           ),
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              color: Colors.red,
-              child: Text(
+            padding: const EdgeInsets.all(15.0),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                primary: Colors.green,
+              ),
+              child: const Text(
                 'False',
                 style: TextStyle(
-                  fontSize: 20.0,
                   color: Colors.white,
+                  fontSize: 20.0,
                 ),
               ),
               onPressed: () {
-                //The user picked false.
+                setState(() {
+                  scoreKeeper.add(
+                      const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      )
+                  );
+                });
               },
             ),
           ),
         ),
         //TODO: Add a Row here as your score keeper
+
       ],
     );
   }
