@@ -27,7 +27,18 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
 
+  int quesNum =0;
   List <Widget> scoreKeeper = [];
+  List <String> questions = [
+    'Flutter is easy to learn for android development.',
+    'Flutter is supported by Facebook.',
+    'Flutter don\'t support ios development.',
+    'For app development with Flutter we use Dart programming language.',
+    'Flutter is supported by Google.',
+    'Flutter is a library of Dart programming language.',
+    'Flutter is a Framework for cross platform mobile development.'
+  ];
+  List <bool> ans = [true,false,false,true,true,false,true];
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +46,15 @@ class _QuizPageState extends State<QuizPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const Expanded(
+        Expanded(
           flex: 5,
           child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questions[quesNum],
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25.0,
                   color: Colors.white,
                 ),
@@ -75,12 +86,24 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  scoreKeeper.add(
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                  );
+                  if(ans[quesNum]){
+                    scoreKeeper.add(
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                    );
+                  }
+                  else{
+                    scoreKeeper.add(
+                        const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        )
+                    );
+                  }
+                  quesNum++;
+                  if(quesNum==7)quesNum=0;
                 });
               },
             ),
@@ -103,12 +126,24 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  scoreKeeper.add(
-                      const Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      )
-                  );
+                  if(ans[quesNum]==false){
+                    scoreKeeper.add(
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                    );
+                  }
+                  else{
+                    scoreKeeper.add(
+                        const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        )
+                    );
+                  }
+                  quesNum+=1;
+                  if(quesNum==7)quesNum=0;
                 });
               },
             ),
@@ -120,9 +155,3 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 }
-
-/*
-question1: 'You can lead a cow down stairs but not up stairs.', false,
-question2: 'Approximately one quarter of human bones are in the feet.', true,
-question3: 'A slug\'s blood is green.', true,
-*/
