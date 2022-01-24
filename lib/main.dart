@@ -65,6 +65,7 @@ Do you want to start again?''',
               setState(() {
                 quesNum = 0;
                 scoreKeeper.clear();
+                rightAns=0;
               });
               Navigator.pop(context, 'Start Again');
             },
