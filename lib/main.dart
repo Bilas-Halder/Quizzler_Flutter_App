@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(Quizzler());
 
 class Quizzler extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
@@ -26,10 +27,10 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-
-  int quesNum =0;
-  List <Widget> scoreKeeper = [];
-  List <String> questions = [
+  int quesNum = 0;
+  int rightAns = 0;
+  List<Widget> scoreKeeper = [];
+  List<String> questions = [
     'Flutter is easy to learn for android development.',
     'Flutter is supported by Facebook.',
     'Flutter don\'t support ios development.',
@@ -38,7 +39,59 @@ class _QuizPageState extends State<QuizPage> {
     'Flutter is a library of Dart programming language.',
     'Flutter is a Framework for cross platform mobile development.'
   ];
-  List <bool> ans = [true,false,false,true,true,false,true];
+  List<bool> ans = [true, false, false, true, true, false, true];
+
+  dynamic showAlert() {
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('All Right!'),
+        content:  Text(
+        '''You have completed all the quiz.
+Your score is :- ${rightAns*10} / ${ans.length*10}.
+
+Do you want to start again?''',
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              SystemNavigator.pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                quesNum = 0;
+                scoreKeeper.clear();
+              });
+              Navigator.pop(context, 'Start Again');
+            },
+            child: const Text('Start Again'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  dynamic showTrueFalse(bool answer) {
+    setState(() {
+      if (answer == true) {
+        scoreKeeper.add(const Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+        rightAns += 1;
+      } else {
+        scoreKeeper.add(const Icon(
+          Icons.close,
+          color: Colors.red,
+        ));
+      }
+      quesNum += 1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,26 +138,15 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  if(ans[quesNum]){
-                    scoreKeeper.add(
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                    );
-                  }
-                  else{
-                    scoreKeeper.add(
-                        const Icon(
-                          Icons.close,
-                          color: Colors.red,
-                        )
-                    );
-                  }
-                  quesNum++;
-                  if(quesNum==7)quesNum=0;
-                });
+                if (ans[quesNum] == true) {
+                  showTrueFalse(true);
+                } else {
+                  showTrueFalse(false);
+                }
+                if (quesNum == 7) {
+                  quesNum = 0;
+                  showAlert();
+                }
               },
             ),
           ),
@@ -125,32 +167,20 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  if(ans[quesNum]==false){
-                    scoreKeeper.add(
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                    );
-                  }
-                  else{
-                    scoreKeeper.add(
-                        const Icon(
-                          Icons.close,
-                          color: Colors.red,
-                        )
-                    );
-                  }
-                  quesNum+=1;
-                  if(quesNum==7)quesNum=0;
-                });
+                if (ans[quesNum] == false) {
+                  showTrueFalse(true);
+                } else {
+                  showTrueFalse(false);
+                }
+                if (quesNum == 7) {
+                  quesNum = 0;
+                  showAlert();
+                }
               },
             ),
           ),
         ),
         //TODO: Add a Row here as your score keeper
-
       ],
     );
   }
